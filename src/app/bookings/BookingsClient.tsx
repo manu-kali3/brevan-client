@@ -65,17 +65,23 @@ export default function BookingsClient({ initialBookings, userId }: { initialBoo
       </div>
 
       <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 20, marginBottom: 24 }}>
-        <h3 style={{ margin: "0 0 12px", fontSize: 16, color: "#212741" }}>Request a service</h3>
+        <h3 style={{ margin: "0 0 4px", fontSize: 16, color: "#212741" }}>Request a service / feature</h3>
+        <p style={{ margin: "0 0 12px", color: "#667085", fontSize: 13 }}>Choose a service and describe the feature you need — we’ll track it as a booking.</p>
         {err && <div style={{ background: "#fff1f0", border: "1px solid #f4c4c1", color: "#b3261e", borderRadius: 8, padding: "10px 14px", fontSize: 14, marginBottom: 12 }}>{err}</div>}
         {msg && <div style={{ background: "#eefaf3", border: "1px solid #bfe8d2", color: "#1c7a4a", borderRadius: 8, padding: "10px 14px", fontSize: 14, marginBottom: 12 }}>{msg}</div>}
         <form onSubmit={onCreate} style={{ display: "grid", gap: 12 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 12 }}>
-            <select value={service} onChange={(e) => setService(e.target.value)} style={{ padding: "11px 14px", border: "1px solid #e5e7eb", borderRadius: 8 }}>
-              <option>Website Design</option><option>WordPress &amp; Joomla</option><option>E-Commerce Solutions</option><option>Real Estate Platforms</option><option>Graphic Design &amp; Branding</option><option>AI Automation</option>
+          <div>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#212741", marginBottom: 6 }}>Service</label>
+            <select value={service} onChange={(e) => setService(e.target.value)} style={{ width: "100%", padding: "11px 14px", border: "1px solid #e5e7eb", borderRadius: 8, background: "#fff" }}>
+              <option>Website Design</option><option>WordPress &amp; Joomla</option><option>E-Commerce Solutions</option><option>Real Estate Platforms</option><option>Graphic Design &amp; Branding</option><option>AI Automation</option><option>Other / Custom</option>
             </select>
-            <input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Brief description (optional)" style={{ padding: "11px 14px", border: "1px solid #e5e7eb", borderRadius: 8 }} />
           </div>
-          <button disabled={busy} style={{ justifySelf: "start", padding: "10px 18px", borderRadius: 10, border: 0, background: "#43ba7f", color: "#fff", fontWeight: 600, cursor: "pointer", opacity: busy ? .6 : 1 }}>{busy ? "Creating…" : "Create booking"}</button>
+          <div>
+            <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#212741", marginBottom: 6 }}>Your request / feature</label>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="e.g., Add dark mode to my site, need M-Pesa STK integration, want a property gallery with filters..." rows={3} required style={{ width: "100%", padding: "11px 14px", border: "1px solid #e5e7eb", borderRadius: 8, resize: "vertical", fontFamily: "inherit" }} />
+            <div style={{ fontSize: 11, color: "#667085", marginTop: 4 }}>{description.length}/5000</div>
+          </div>
+          <button disabled={busy || !description.trim()} style={{ justifySelf: "start", padding: "10px 18px", borderRadius: 10, border: 0, background: "#43ba7f", color: "#fff", fontWeight: 600, cursor: "pointer", opacity: busy || !description.trim() ? .6 : 1 }}>{busy ? "Creating…" : "Submit request"}</button>
         </form>
       </div>
 
