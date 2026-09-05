@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase";
+import { createClient, createAdminClient } from "@/lib/supabase";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { send2FACode } from "@/lib/2fa";
 export const runtime = "nodejs";
@@ -16,6 +16,14 @@ export async function POST(request: Request) {
   if (error) return NextResponse.json({ error: "Invalid email or password." }, { status: 400 });
   const userId = data.user?.id;
   if (!userId) return NextResponse.json({ error: "Login failed." }, { status: 500 });
+  const admin = createAdminClient();
+  if (admin) {
+    const { data: pref } = await admin.from("user_preferences").select("enable_2fa").eq("user_id", userId).single();
+    const enabled = (pref as any)?.enable_2fa ?? true;
+    if (!enabled) {
+      return NextResponse.json({ ok: true, needs2FA: false });
+    }
+  }
   await supabase.auth.signOut();
   try {
     await send2FACode(userId, email);
