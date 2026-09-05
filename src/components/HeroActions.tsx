@@ -16,7 +16,7 @@ export default function HeroActions() {
   if (user) {
     return (
       <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
-        <Link href="/bookings" style={{ background: "#ff511a", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>My bookings</Link>
+        <Link href="/trackbookings" style={{ background: "#ff511a", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>My bookings</Link>
         <Link href="/settings" style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>Settings</Link>
       </div>
     );
@@ -26,7 +26,7 @@ export default function HeroActions() {
     <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
       <Link href="/login" style={{ background: "#43ba7f", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>Sign in</Link>
       <Link href="/signup" style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>Create account</Link>
-      <Link href="/bookings" style={{ background: "#ff511a", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>My bookings</Link>
+      <Link href="/trackbookings" style={{ background: "#ff511a", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>My bookings</Link>
     </div>
   );
 }

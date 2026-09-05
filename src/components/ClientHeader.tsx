@@ -42,7 +42,7 @@ export default function ClientHeader() {
 
         <nav style={{ display: "flex", gap: 4, alignItems: "center" }} className="d-none d-md-flex">
           <Link href="/" style={linkStyle(pathname === "/")}>Home</Link>
-          <Link href="/bookings" style={linkStyle(isActive("/bookings"))}>My Bookings</Link>
+          <Link href="/trackbookings" style={linkStyle(isActive("/trackbookings"))}>My Bookings</Link>
           <Link href="/terms" style={linkStyle(isActive("/terms"))}>Terms</Link>
           <Link href="/privacy-policy" style={linkStyle(isActive("/privacy-policy"))}>Privacy</Link>
           {user ? (
@@ -73,7 +73,7 @@ export default function ClientHeader() {
       {open && (
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", background: "#1a2138", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 6 }}>
           <Link href="/" onClick={() => setOpen(false)} style={linkStyle(pathname === "/")}>Home</Link>
-          <Link href="/bookings" onClick={() => setOpen(false)} style={linkStyle(isActive("/bookings"))}>My Bookings</Link>
+          <Link href="/trackbookings" onClick={() => setOpen(false)} style={linkStyle(isActive("/trackbookings"))}>My Bookings</Link>
           <Link href="/terms" onClick={() => setOpen(false)} style={linkStyle(isActive("/terms"))}>Terms</Link>
           <Link href="/privacy-policy" onClick={() => setOpen(false)} style={linkStyle(isActive("/privacy-policy"))}>Privacy</Link>
           {user ? (

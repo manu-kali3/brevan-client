@@ -21,7 +21,7 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
-  const isProtected = ["/bookings", "/dashboard"].some((p) => pathname === p || pathname.startsWith(p + "/"));
+  const isProtected = ["/trackbookings", "/bookings", "/dashboard"].some((p) => pathname === p || pathname.startsWith(p + "/"));
   if (isProtected && !user) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
@@ -30,7 +30,7 @@ export async function proxy(request: NextRequest) {
   }
   if ((pathname === "/login" || pathname === "/signup") && user) {
     const url2 = request.nextUrl.clone();
-    url2.pathname = "/bookings";
+    url2.pathname = "/trackbookings";
     url2.search = "";
     return NextResponse.redirect(url2);
   }
@@ -38,5 +38,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/bookings/:path*", "/dashboard/:path*", "/login", "/signup"],
+  matcher: ["/trackbookings/:path*", "/bookings/:path*", "/dashboard/:path*", "/login", "/signup"],
 };
