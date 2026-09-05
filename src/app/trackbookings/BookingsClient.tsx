@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-type Booking = { id: string; service: string; description: string | null; status: string; amount: number | null; created_at: string; project_url: string | null };
+type Booking = { id: string; service: string; description: string | null; status: string; amount: number | null; created_at: string; project_url: string | null; payment_status: string | null };
 type Comment = { id: string; booking_id: string; body: string; is_admin: boolean; created_at: string; user_id: string };
 
 export default function BookingsClient({ initialBookings, userId }: { initialBookings: Booking[]; userId: string }) {
@@ -16,6 +16,10 @@ export default function BookingsClient({ initialBookings, userId }: { initialBoo
   const [commentBody, setCommentBody] = useState("");
   const [cBusy, setCBusy] = useState(false);
   const [cErr, setCErr] = useState("");
+  const [payPhone, setPayPhone] = useState("");
+  const [payBusy, setPayBusy] = useState(false);
+  const [payMsg, setPayMsg] = useState("");
+  const [payErr, setPayErr] = useState("");
 
   async function refresh() {
     const res = await fetch("/api/bookings");
@@ -102,7 +106,9 @@ export default function BookingsClient({ initialBookings, userId }: { initialBoo
             <>
               {(() => {
                 const b = bookings.find((x) => x.id === selected);
-                return b ? (
+                if (!b) return null;
+                const needsPay = b.status === "completed" && b.amount && Number(b.amount) > 0 && b.payment_status !== "paid";
+                return (
                   <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 10, padding: 12, marginBottom: 14 }}>
                     <div style={{ fontWeight: 700, color: "#212741", fontSize: 14 }}>{b.service} · <span style={{ fontWeight: 400, color: "#6b7280" }}>{b.status}</span></div>
                     <div style={{ fontSize: 13, color: "#1e2430", marginTop: 4, whiteSpace: "pre-wrap" }}>{b.description ?? "—"}</div>
@@ -113,10 +119,51 @@ export default function BookingsClient({ initialBookings, userId }: { initialBoo
                       ) : (
                         <span style={{ fontSize: 12, color: "#6b7280", background: "#fff", border: "1px dashed #e5e7eb", padding: "6px 10px", borderRadius: 8 }}>Link pending — admin will add it</span>
                       )}
-                      <span style={{ fontSize: 11, color: "#667085" }}>Suggest changes below — link stays here.</span>
                     </div>
+                    {b.status === "completed" && b.amount && Number(b.amount) > 0 && (
+                      <div style={{ marginTop: 12, padding: 12, background: b.payment_status === "paid" ? "#eefaf3" : "#fff7e8", border: `1px solid ${b.payment_status === "paid" ? "#bfe8d2" : "#f3dfb0"}`, borderRadius: 8 }}>
+                        {b.payment_status === "paid" ? (
+                          <div style={{ color: "#1c7a4a", fontWeight: 600, fontSize: 13 }}>✓ Paid KES {Number(b.amount).toLocaleString()} — thank you!</div>
+                        ) : (
+                          <>
+                            <div style={{ fontWeight: 700, color: "#212741", fontSize: 13 }}>Project completed — KES {Number(b.amount).toLocaleString()} due</div>
+                            <p style={{ fontSize: 12, color: "#667085", margin: "4px 0 8px" }}>Admin has set the price. Approve by paying via M-Pesa.</p>
+                            {payMsg && <div style={{ background: "#eefaf3", border: "1px solid #bfe8d2", color: "#1c7a4a", borderRadius: 6, padding: "6px 10px", fontSize: 12, marginBottom: 8 }}>{payMsg}</div>}
+                            {payErr && <div style={{ background: "#fff1f0", border: "1px solid #f4c4c1", color: "#b3261e", borderRadius: 6, padding: "6px 10px", fontSize: 12, marginBottom: 8 }}>{payErr}</div>}
+                            <div style={{ display: "flex", gap: 8 }}>
+                              <input value={payPhone} onChange={(e) => setPayPhone(e.target.value)} placeholder="0712 345 678" style={{ flex: 1, padding: "8px 12px", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 14 }} />
+                              <button
+                                disabled={payBusy}
+                                onClick={async () => {
+                                  setPayErr(""); setPayMsg(""); setPayBusy(true);
+                                  try {
+                                    const r = await fetch("/api/payments/pay", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ bookingId: b.id, phone: payPhone }) });
+                                    const d = await r.json();
+                                    if (!r.ok) { setPayErr(d.error ?? "Failed."); setPayBusy(false); return; }
+                                    setPayMsg(d.message ?? "Enter M-PESA PIN. Waiting…");
+                                    let attempts = 0;
+                                    const iv = setInterval(async () => {
+                                      attempts++;
+                                      const s = await fetch(`/api/payments/status?bookingId=${b.id}`);
+                                      const sd = await s.json();
+                                      if (sd.status === "paid") { clearInterval(iv); setPayMsg("Payment confirmed!"); await refresh(); }
+                                      else if (sd.status === "failed" || attempts > 30) { clearInterval(iv); if (sd.status === "failed") setPayErr("Payment failed."); }
+                                    }, 4000);
+                                  } catch { setPayErr("Network error."); }
+                                  setPayBusy(false);
+                                }}
+                                style={{ padding: "8px 16px", borderRadius: 8, border: 0, background: "#ff511a", color: "#fff", fontWeight: 700, cursor: "pointer", opacity: payBusy ? .6 : 1 }}
+                              >
+                                {payBusy ? "…" : `Pay KES ${Number(b.amount).toLocaleString()}`}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+                    {!needsPay && b.status !== "completed" && <div style={{ fontSize: 11, color: "#667085", marginTop: 6 }}>Suggest changes below — link stays here.</div>}
                   </div>
-                ) : null;
+                );
               })()}
               <h3 style={{ margin: "0 0 14px", fontSize: 16, color: "#212741" }}>Suggest changes</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 360, overflowY: "auto", marginBottom: 14, padding: 4 }}>
