@@ -1,11 +1,25 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createBrowser } from "@/lib/supabase-browser";
 
 export default function ClientHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<{ id: string } | null>(null);
+
+  useEffect(() => {
+    const supabase = createBrowser();
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ? { id: data.session.user.id } : null);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUser(session?.user ? { id: session.user.id } : null);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
   const isActive = (p: string) => pathname === p || pathname.startsWith(p + "/");
   const linkStyle = (active: boolean) => ({
     padding: "8px 14px",
@@ -31,8 +45,25 @@ export default function ClientHeader() {
           <Link href="/bookings" style={linkStyle(isActive("/bookings"))}>My Bookings</Link>
           <Link href="/terms" style={linkStyle(isActive("/terms"))}>Terms</Link>
           <Link href="/privacy-policy" style={linkStyle(isActive("/privacy-policy"))}>Privacy</Link>
-          <Link href="/login" style={{ ...linkStyle(isActive("/login")), border: "1px solid rgba(255,255,255,0.2)", marginLeft: 6 }}>Sign in</Link>
-          <Link href="/signup" style={{ background: "#43ba7f", color: "#fff", padding: "8px 16px", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none", marginLeft: 4 }}>Create account</Link>
+          {user ? (
+            <button
+              onClick={async () => {
+                const s = createBrowser();
+                await s.auth.signOut();
+                await fetch("/api/auth/logout", { method: "POST" });
+                router.push("/");
+                router.refresh();
+              }}
+              style={{ background: "rgba(255,255,255,0.12)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", padding: "8px 16px", borderRadius: 8, fontWeight: 700, fontSize: 14, cursor: "pointer", marginLeft: 6 }}
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link href="/login" style={{ ...linkStyle(isActive("/login")), border: "1px solid rgba(255,255,255,0.2)", marginLeft: 6 }}>Sign in</Link>
+              <Link href="/signup" style={{ background: "#43ba7f", color: "#fff", padding: "8px 16px", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none", marginLeft: 4 }}>Create account</Link>
+            </>
+          )}
         </nav>
 
         <button onClick={() => setOpen((v) => !v)} className="d-md-none" style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 8, padding: "8px 12px", fontWeight: 700 }}>
@@ -45,8 +76,26 @@ export default function ClientHeader() {
           <Link href="/bookings" onClick={() => setOpen(false)} style={linkStyle(isActive("/bookings"))}>My Bookings</Link>
           <Link href="/terms" onClick={() => setOpen(false)} style={linkStyle(isActive("/terms"))}>Terms</Link>
           <Link href="/privacy-policy" onClick={() => setOpen(false)} style={linkStyle(isActive("/privacy-policy"))}>Privacy</Link>
-          <Link href="/login" onClick={() => setOpen(false)} style={{ ...linkStyle(isActive("/login")), textAlign: "center" }}>Sign in</Link>
-          <Link href="/signup" onClick={() => setOpen(false)} style={{ background: "#43ba7f", color: "#fff", padding: "10px", borderRadius: 8, fontWeight: 700, textAlign: "center", textDecoration: "none" }}>Create account</Link>
+          {user ? (
+            <button
+              onClick={async () => {
+                const s = createBrowser();
+                await s.auth.signOut();
+                await fetch("/api/auth/logout", { method: "POST" });
+                setOpen(false);
+                router.push("/");
+                router.refresh();
+              }}
+              style={{ background: "rgba(255,255,255,0.12)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", padding: "10px", borderRadius: 8, fontWeight: 700, cursor: "pointer" }}
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link href="/login" onClick={() => setOpen(false)} style={{ ...linkStyle(isActive("/login")), textAlign: "center" }}>Sign in</Link>
+              <Link href="/signup" onClick={() => setOpen(false)} style={{ background: "#43ba7f", color: "#fff", padding: "10px", borderRadius: 8, fontWeight: 700, textAlign: "center", textDecoration: "none" }}>Create account</Link>
+            </>
+          )}
         </div>
       )}
     </header>
