@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import ClientHeader from "@/components/ClientHeader";
-import Footer from "@/components/Footer";
+import ClientFooter from "@/components/ClientFooter";
 import SiteImagesProvider from "@/components/SiteImagesProvider";
 import { listSiteImages } from "@/lib/site-settings";
 
@@ -100,7 +100,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <SiteImagesProvider images={images}>
           <ClientHeader />
           {children}
-          <Footer images={images} />
+          <ClientFooter />
         </SiteImagesProvider>
       </body>
     </html>

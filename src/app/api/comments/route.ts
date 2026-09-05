@@ -3,6 +3,8 @@ import { createClient, createAdminClient } from "@/lib/supabase";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export async function GET(request: Request) {
+  const rl = rateLimit(`comments:get:${clientIp(request)}`, 60, 60 * 1000);
+  if (!rl.ok) return NextResponse.json({ error: "Too many requests." }, { status: 429, headers: { "Retry-After": String(rl.retryAfter) } });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
