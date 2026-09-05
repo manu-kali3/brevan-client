@@ -1,4 +1,4 @@
-import Link from "next/link";
+import HeroActions from "@/components/HeroActions";
 
 export default function Home() {
   return (
@@ -12,11 +12,7 @@ export default function Home() {
                 Track your <em style={{ color: "#43ba7f", fontStyle: "normal" }}>service</em> &amp; request <em style={{ color: "#ff511a", fontStyle: "normal" }}>changes</em>
               </h1>
               <p style={{ color: "#ffffff", opacity: 0.92, fontSize: 16, maxWidth: 560, textShadow: "0 1px 6px rgba(0,0,0,0.2)" }}>Same trusted Brevan design. Sign in to view your bookings, check status, and comment directly on your service — admin replies in the same thread.</p>
-              <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
-                <Link href="/login" className="btn" style={{ background: "#43ba7f", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>Sign in</Link>
-                <Link href="/signup" className="btn" style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>Create account</Link>
-                <Link href="/bookings" className="btn" style={{ background: "#ff511a", color: "#fff", padding: "12px 22px", borderRadius: 8, fontWeight: 700, textDecoration: "none" }}>My bookings</Link>
-              </div>
+              <HeroActions />
             </div>
           </div>
         </div>
