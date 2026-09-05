@@ -6,27 +6,39 @@ import SiteImagesProvider from "@/components/SiteImagesProvider";
 import { listSiteImages } from "@/lib/site-settings";
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://brevansoftwares.co.ke";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://client.brevansoftwares.co.ke";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Brevan Softwares - AI Automation & Web Design in Kenya",
+    default: "Brevan Softwares - Software Company in Kenya | Web Developers Narok Bomet Kericho Nakuru",
     template: "%s | Brevan Softwares",
   },
   description:
-    "Brevan Softwares is a Kenyan technology initiative by Emmanuel Kiplangat offering AI automation, website design, WordPress, Joomla, e-commerce, real estate platforms and graphic design for local businesses, schools and communities.",
+    "Brevan Softwares — software company in Kenya and software designer in Narok, Bomet, Kericho, Nakuru. Web developers offering AI automation, website design, WordPress, Joomla, e-commerce, real estate platforms and graphic design by Emmanuel Kiplangat.",
   keywords: [
+    "software company in Kenya",
+    "software company Kenya",
+    "Brevan",
+    "Brevan Softwares",
+    "software designer Narok",
+    "software designer Bomet",
+    "software designer Kericho",
+    "software designer Nakuru",
+    "web developers Narok",
+    "web developers Bomet",
+    "web developers Kericho",
+    "web developers Nakuru",
+    "web developers Kenya",
     "AI automation Kenya",
     "website design Kenya",
-    "WordPress developer",
+    "WordPress developer Kenya",
     "Joomla development",
     "e-commerce Kenya",
     "graphic design Narok",
     "digital training Kenya",
-    "Brevan Softwares",
   ],
   applicationName: "Brevan Softwares",
   alternates: {
@@ -37,15 +49,15 @@ export const metadata: Metadata = {
     locale: "en_KE",
     url: SITE_URL,
     siteName: "Brevan Softwares",
-    title: "Brevan Softwares - AI Automation & Web Design in Kenya",
+    title: "Brevan Softwares - Software Company in Kenya | Web Developers Narok Bomet Kericho Nakuru",
     description:
-      "AI automation, website design and digital tools that help local businesses, schools and communities across Kenya grow.",
+      "Software company in Kenya — Brevan software designer in Narok, Bomet, Kericho, Nakuru. Web developers for AI automation and website design.",
   },
   twitter: {
     card: "summary",
-    title: "Brevan Softwares - AI Automation & Web Design in Kenya",
+    title: "Brevan Softwares - Software Company in Kenya | Web Developers Narok Bomet Kericho Nakuru",
     description:
-      "AI automation, website design and digital tools that help local businesses, schools and communities across Kenya grow.",
+      "Software company in Kenya — Brevan software designer in Narok, Bomet, Kericho, Nakuru. Web developers for AI automation and website design.",
   },
   robots: {
     index: true,
@@ -78,20 +90,55 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Brevan Softwares",
+              alternateName: "Brevan",
               url: SITE_URL,
               email: "brevansoftwares@gmail.com",
               telephone: "+254117004147",
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "Narok",
+                addressRegion: "Narok",
                 addressCountry: "KE",
               },
+              areaServed: [
+                { "@type": "City", name: "Narok" },
+                { "@type": "City", name: "Bomet" },
+                { "@type": "City", name: "Kericho" },
+                { "@type": "City", name: "Nakuru" },
+                { "@type": "Country", name: "Kenya" },
+              ],
               founder: {
                 "@type": "Person",
                 name: "Emmanuel Kiplangat",
               },
               description:
-                "AI automation, website design and digital tools for local businesses, schools and communities across Kenya.",
+                "Software company in Kenya — Brevan software designer in Narok, Bomet, Kericho, Nakuru. Web developers offering AI automation, website design, WordPress, Joomla, e-commerce and graphic design.",
+              keywords:
+                "software company in Kenya, software designer Narok, software designer Bomet, software designer Kericho, software designer Nakuru, web developers Kenya",
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              name: "Brevan Softwares",
+              image: `${SITE_URL}/assets/images/brevan-logo.jpg`,
+              url: SITE_URL,
+              telephone: "+254117004147",
+              email: "brevansoftwares@gmail.com",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "Narok Town",
+                addressLocality: "Narok",
+                addressRegion: "Rift Valley",
+                postalCode: "20500",
+                addressCountry: "KE",
+              },
+              areaServed: ["Narok", "Bomet", "Kericho", "Nakuru", "Kenya"],
+              priceRange: "$$",
             }),
           }}
         />

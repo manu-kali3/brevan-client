@@ -40,6 +40,13 @@ export default function Home() {
               </div>
             </div>
           </div>
+          <div style={{ marginTop: 32, padding: 20, background: "#f9fafb", border: "1px solid #e8eaf0", borderRadius: 12, textAlign: "center" }}>
+            <h2 style={{ fontSize: 18, color: "#212741", margin: "0 0 8px" }}>Software company in Kenya — serving Narok, Bomet, Kericho, Nakuru</h2>
+            <p style={{ color: "#667085", fontSize: 14, margin: 0, maxWidth: 720, marginInline: "auto" }}>
+              Brevan — trusted software designer in Narok, Bomet, Kericho and Nakuru. Our web developers build AI automation, websites, WordPress, Joomla, e-commerce and real estate platforms for businesses across Kenya.
+            </p>
+            <p style={{ color: "#667085", fontSize: 12, marginTop: 8 }}>Searches: software company in Kenya, Brevan software designer Narok, software designer Bomet, software designer Kericho, software designer Nakuru, web developers Kenya</p>
+          </div>
         </div>
       </section>
     </>
