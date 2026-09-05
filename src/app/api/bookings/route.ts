@@ -6,7 +6,7 @@ export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
-  const { data, error } = await supabase.from("service_bookings").select("id,service,description,status,amount,created_at").eq("user_id", user.id).order("created_at", { ascending: false });
+  const { data, error } = await supabase.from("service_bookings").select("id,service,description,status,amount,created_at,project_url").eq("user_id", user.id).order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ bookings: data ?? [] });
 }
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   if (description.length > 5000) return NextResponse.json({ error: "Description too long." }, { status: 400 });
   const admin = createAdminClient();
   const client = admin ?? supabase;
-  const { data, error } = await (client as any).from("service_bookings").insert([{ user_id: user.id, service, description: description || null, status: "pending" }]).select("id,service,description,status,amount,created_at").single();
+  const { data, error } = await (client as any).from("service_bookings").insert([{ user_id: user.id, service, description: description || null, status: "pending" }]).select("id,service,description,status,amount,created_at,project_url").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true, booking: data });
 }

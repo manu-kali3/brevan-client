@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-type Booking = { id: string; service: string; description: string | null; status: string; amount: number | null; created_at: string };
+type Booking = { id: string; service: string; description: string | null; status: string; amount: number | null; created_at: string; project_url: string | null };
 type Comment = { id: string; booking_id: string; body: string; is_admin: boolean; created_at: string; user_id: string };
 
 export default function BookingsClient({ initialBookings, userId }: { initialBookings: Booking[]; userId: string }) {
@@ -100,7 +100,25 @@ export default function BookingsClient({ initialBookings, userId }: { initialBoo
         <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: 20, minHeight: 320 }}>
           {!selected ? <div style={{ color: "#6b7280" }}>Select a booking to view messages.</div> : (
             <>
-              <h3 style={{ margin: "0 0 14px", fontSize: 16, color: "#212741" }}>Messages</h3>
+              {(() => {
+                const b = bookings.find((x) => x.id === selected);
+                return b ? (
+                  <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 10, padding: 12, marginBottom: 14 }}>
+                    <div style={{ fontWeight: 700, color: "#212741", fontSize: 14 }}>{b.service} · <span style={{ fontWeight: 400, color: "#6b7280" }}>{b.status}</span></div>
+                    <div style={{ fontSize: 13, color: "#1e2430", marginTop: 4, whiteSpace: "pre-wrap" }}>{b.description ?? "—"}</div>
+                    <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "#212741" }}>Track my booking:</span>
+                      {b.project_url ? (
+                        <a href={b.project_url} target="_blank" rel="noopener noreferrer" style={{ background: "#43ba7f", color: "#fff", padding: "6px 12px", borderRadius: 8, fontWeight: 600, fontSize: 13, textDecoration: "none" }}>Access project ↗</a>
+                      ) : (
+                        <span style={{ fontSize: 12, color: "#6b7280", background: "#fff", border: "1px dashed #e5e7eb", padding: "6px 10px", borderRadius: 8 }}>Link pending — admin will add it</span>
+                      )}
+                      <span style={{ fontSize: 11, color: "#667085" }}>Suggest changes below — link stays here.</span>
+                    </div>
+                  </div>
+                ) : null;
+              })()}
+              <h3 style={{ margin: "0 0 14px", fontSize: 16, color: "#212741" }}>Suggest changes</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 360, overflowY: "auto", marginBottom: 14, padding: 4 }}>
                 {comments.length === 0 ? <div style={{ color: "#6b7280", fontSize: 14 }}>No messages yet. Start the conversation.</div> :
                   comments.map((c) => (
