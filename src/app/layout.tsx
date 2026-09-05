@@ -4,6 +4,7 @@ import ClientHeader from "@/components/ClientHeader";
 import ClientFooter from "@/components/ClientFooter";
 import SiteImagesProvider from "@/components/SiteImagesProvider";
 import { listSiteImages } from "@/lib/site-settings";
+import { OfflineBanner, MaintenanceBanner } from "@/components/SystemStatus";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://client.brevansoftwares.co.ke";
@@ -67,6 +68,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const images = await listSiteImages();
+  const dbDown = !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   return (
     <html lang="en" data-scroll-behavior="smooth">
@@ -144,6 +146,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         />
       </head>
       <body>
+        <OfflineBanner />
+        <MaintenanceBanner isDown={dbDown} />
         <SiteImagesProvider images={images}>
           <ClientHeader />
           {children}
