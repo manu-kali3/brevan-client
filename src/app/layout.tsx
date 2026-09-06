@@ -6,8 +6,7 @@ import SiteImagesProvider from "@/components/SiteImagesProvider";
 import { listSiteImages } from "@/lib/site-settings";
 import { OfflineBanner, MaintenanceBanner } from "@/components/SystemStatus";
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://clients.brevansoftwares.co.ke";
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://clients.brevansoftwares.co.ke").replace("https://client.brevansoftwares.co.ke", "https://clients.brevansoftwares.co.ke");
 
 export const revalidate = 300;
 

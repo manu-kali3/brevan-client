@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://clients.brevansoftwares.co.ke";
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://clients.brevansoftwares.co.ke").replace("https://client.brevansoftwares.co.ke", "https://clients.brevansoftwares.co.ke");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
